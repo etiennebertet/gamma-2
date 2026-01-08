@@ -12,7 +12,7 @@ public with sharing class MistralPromptGenerator {
             // 1. Make the API callout
             String generatedText = makeMistralAPICall();
             
-            // 2. Create record with the response
+            // 2. Create a record with the response
             if(String.isNotBlank(generatedText)) {
                 Mistral_Prompt__c newPrompt = new Mistral_Prompt__c(
                     Mistral_Prompt_Story__c = generatedText,
@@ -27,7 +27,7 @@ public with sharing class MistralPromptGenerator {
     }
     
     private static String makeMistralAPICall() {
-        // 1. Prepare request with corrected model ID
+        // 1. Prepare the request with the corrected model ID
         String endpoint = '/api/v1/chat/completions';
         
         Map<String, Object> requestBody = new Map<String, Object>{
@@ -42,7 +42,7 @@ public with sharing class MistralPromptGenerator {
             'max_tokens' => 100
         };
 
-        // 2. Make API call with all required headers
+        // 2. Make an API call with all required headers
         HttpRequest req = new HttpRequest();
         req.setEndpoint('callout:Mistral_NamedCred' + endpoint);
         req.setMethod('POST');
@@ -50,8 +50,8 @@ public with sharing class MistralPromptGenerator {
         req.setHeader('Content-Type', 'application/json');
         
         // REQUIRED headers per documentation
-        req.setHeader('Authorization', 'Bearer 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');
-        req.setHeader('HTTP-Referer', 'https://orgfarm-c13c4c7918-dev-ed.develop.lightning.force.com/');
+        req.setHeader('Authorization', 'Bearer YOUR-API-KEY');
+        req.setHeader('HTTP-Referer', 'YOUR-SF-ORG');
         req.setHeader('X-Title', 'Gamma2 Project');
         
         req.setTimeout(20000);
@@ -78,4 +78,5 @@ public with sharing class MistralPromptGenerator {
         Map<String, Object> errorResponse = (Map<String, Object>)JSON.deserializeUntyped(res.getBody());
         throw new CalloutException('API Error ' + res.getStatusCode() + ': ' + JSON.serialize(errorResponse));
     }
+
 }
